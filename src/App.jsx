@@ -26,16 +26,15 @@ function App() {
       }}
     >
 
-
-      <aside
-        style={{
-          width:"240px",
-          background:"#111827",
-          color:"white",
-          padding:"25px"
-        }}
-      >
-
+<aside
+  style={{
+    width:"250px",
+    background:"#0f172a",
+    color:"white",
+    padding:"25px",
+    boxShadow:"2px 0 10px rgba(0,0,0,0.15)"
+  }}
+>
 
         <h2>🚀 NegócioAI</h2>
 

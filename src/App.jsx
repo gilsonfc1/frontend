@@ -3,6 +3,7 @@ import { useState } from "react";
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
 import Financeiro from "./pages/Financeiro";
+import Agenda from "./pages/Agenda";
 
 
 function App() {
@@ -98,10 +99,7 @@ function App() {
         {pagina === "financeiro" && <Financeiro />}
 
 
-
-        {pagina === "agenda" &&
-          <h1>📅 Agenda em construção</h1>
-        }
+        {pagina === "agenda" && <Agenda />}
 
 
 

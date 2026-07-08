@@ -1,32 +1,40 @@
 import { useState } from "react";
+
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
+import Financeiro from "./pages/Financeiro";
+
 
 function App() {
 
   const [pagina, setPagina] = useState("dashboard");
 
+
   return (
+
     <div
       style={{
-        display: "flex",
-        height: "100vh",
-        fontFamily: "Arial"
+        display:"flex",
+        height:"100vh",
+        fontFamily:"Arial"
       }}
     >
 
+
       <aside
         style={{
-          width: "240px",
-          background: "#111827",
-          color: "white",
-          padding: "25px"
+          width:"240px",
+          background:"#111827",
+          color:"white",
+          padding:"25px"
         }}
       >
+
 
         <h2>🚀 NegócioAI</h2>
 
         <hr />
+
 
         <button
           onClick={() => setPagina("dashboard")}
@@ -71,17 +79,24 @@ function App() {
       </aside>
 
 
+
       <main
         style={{
-          flex: 1,
-          padding: "35px",
-          background: "#f3f4f6"
+          flex:1,
+          background:"#f3f4f6",
+          padding:"35px"
         }}
       >
 
+
         {pagina === "dashboard" && <Dashboard />}
 
+
         {pagina === "clientes" && <Clientes />}
+
+
+        {pagina === "financeiro" && <Financeiro />}
+
 
 
         {pagina === "agenda" &&
@@ -89,34 +104,36 @@ function App() {
         }
 
 
-        {pagina === "financeiro" &&
-          <h1>💰 Financeiro em construção</h1>
-        }
-
 
         {pagina === "ia" &&
           <h1>🤖 Assistente IA em construção</h1>
         }
 
 
+
       </main>
 
 
     </div>
+
   );
 }
 
 
+
 const estiloBotao = {
-  background: "transparent",
-  color: "white",
-  border: "none",
-  padding: "12px",
-  width: "100%",
-  textAlign: "left",
-  fontSize: "16px",
-  cursor: "pointer"
+
+  background:"transparent",
+  color:"white",
+  border:"none",
+  padding:"12px",
+  width:"100%",
+  textAlign:"left",
+  fontSize:"16px",
+  cursor:"pointer"
+
 };
+
 
 
 export default App;

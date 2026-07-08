@@ -1,3 +1,4 @@
+import Login from "./pages/Login";
 import { useState } from "react";
 
 import Dashboard from "./pages/Dashboard";
@@ -9,6 +10,10 @@ import Agenda from "./pages/Agenda";
 function App() {
 
   const [pagina, setPagina] = useState("dashboard");
+  const [logado, setLogado] = useState(false);
+  if (!logado) {
+  return <Login entrar={() => setLogado(true)} />;
+}
 
 
   return (

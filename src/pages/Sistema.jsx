@@ -11,6 +11,11 @@ function Sistema() {
   const [pagina, setPagina] = useState("dashboard");
 
 
+  function classeBotao(nome) {
+    return pagina === nome ? "menu-ativo" : "";
+  }
+
+
   return (
 
     <div className="layout">
@@ -22,22 +27,34 @@ function Sistema() {
         <h2>NegócioAI</h2>
 
 
-        <button onClick={() => setPagina("dashboard")}>
+        <button
+          className={classeBotao("dashboard")}
+          onClick={() => setPagina("dashboard")}
+        >
           🏠 Painel de controle
         </button>
 
 
-        <button onClick={() => setPagina("clientes")}>
+        <button
+          className={classeBotao("clientes")}
+          onClick={() => setPagina("clientes")}
+        >
           👥 Clientes
         </button>
 
 
-        <button onClick={() => setPagina("agenda")}>
+        <button
+          className={classeBotao("agenda")}
+          onClick={() => setPagina("agenda")}
+        >
           📅 Agenda
         </button>
 
 
-        <button onClick={() => setPagina("financeiro")}>
+        <button
+          className={classeBotao("financeiro")}
+          onClick={() => setPagina("financeiro")}
+        >
           💰 Financeiro
         </button>
 

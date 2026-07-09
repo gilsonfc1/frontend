@@ -19,3 +19,6 @@
   flex: 1;
   padding: 30px;
 }
+.menu-ativo {
+  background: #1d4ed8;
+}

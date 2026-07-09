@@ -5,40 +5,43 @@ function Agenda() {
   const [cliente, setCliente] = useState("");
   const [data, setData] = useState("");
   const [horario, setHorario] = useState("");
-  const [servico, setServico] = useState("");
 
-  const [agenda, setAgenda] = useState(() => {
-    const dados = localStorage.getItem("agenda");
-    return dados ? JSON.parse(dados) : [];
+  const [agendamentos, setAgendamentos] = useState(() => {
+    const dadosSalvos = localStorage.getItem("agendamentos");
+
+    return dadosSalvos ? JSON.parse(dadosSalvos) : [];
   });
 
 
-  function adicionarAgendamento() {
+  const clientes = JSON.parse(
+    localStorage.getItem("clientes")
+  ) || [];
 
-    if (!cliente || !data || !horario) {
+
+  function criarAgendamento() {
+
+    if (cliente === "" || data === "" || horario === "") {
       return;
     }
-
 
     const novoAgendamento = {
       cliente,
       data,
-      horario,
-      servico
+      horario
     };
 
 
     const novaLista = [
-      ...agenda,
+      ...agendamentos,
       novoAgendamento
     ];
 
 
-    setAgenda(novaLista);
+    setAgendamentos(novaLista);
 
 
     localStorage.setItem(
-      "agenda",
+      "agendamentos",
       JSON.stringify(novaLista)
     );
 
@@ -46,130 +49,76 @@ function Agenda() {
     setCliente("");
     setData("");
     setHorario("");
-    setServico("");
-
-  }
-
-
-  function excluirAgendamento(index) {
-
-    const novaLista = agenda.filter(
-      (_, i) => i !== index
-    );
-
-    setAgenda(novaLista);
-
-    localStorage.setItem(
-      "agenda",
-      JSON.stringify(novaLista)
-    );
 
   }
 
 
   return (
-
     <div>
 
-      <h1>📅 Agenda</h1>
+      <h1>Agenda</h1>
 
 
-      <input
-        placeholder="Nome do cliente"
+      <select
         value={cliente}
-        onChange={(e)=>setCliente(e.target.value)}
-      />
+        onChange={(e) => setCliente(e.target.value)}
+      >
+
+        <option value="">
+          Selecione o cliente
+        </option>
+
+        {clientes.map((c, index) => (
+          <option key={index} value={c.nome}>
+            {c.nome}
+          </option>
+        ))}
+
+      </select>
 
 
-      <br />
+      <br /><br />
 
 
       <input
         type="date"
         value={data}
-        onChange={(e)=>setData(e.target.value)}
+        onChange={(e) => setData(e.target.value)}
       />
 
 
-      <br />
+      <br /><br />
 
 
       <input
         type="time"
         value={horario}
-        onChange={(e)=>setHorario(e.target.value)}
+        onChange={(e) => setHorario(e.target.value)}
       />
 
 
-      <br />
+      <br /><br />
 
 
-      <input
-        placeholder="Serviço"
-        value={servico}
-        onChange={(e)=>setServico(e.target.value)}
-      />
-
-
-      <br />
-
-
-      <button onClick={adicionarAgendamento}>
-        Adicionar Agendamento
+      <button onClick={criarAgendamento}>
+        Criar agendamento
       </button>
 
 
-      <h2>
-        Próximos compromissos
-      </h2>
+      <h2>Compromissos</h2>
 
 
-      {agenda.map((item,index)=>(
+      {agendamentos.map((item, index) => (
 
-        <div
-          key={index}
-          style={{
-            background:"white",
-            padding:"15px",
-            marginTop:"10px",
-            borderRadius:"8px"
-          }}
-        >
-
-          <strong>
-            👤 {item.cliente}
-          </strong>
-
-          <p>
-            📅 {item.data}
-          </p>
-
-          <p>
-            ⏰ {item.horario}
-          </p>
-
-          <p>
-            🔧 {item.servico}
-          </p>
-
-
-          <button
-            onClick={()=>excluirAgendamento(index)}
-          >
-            Excluir
-          </button>
-
-
-        </div>
+        <p key={index}>
+          {item.cliente} - {item.data} - {item.horario}
+        </p>
 
       ))}
 
 
     </div>
-
   );
-
 }
-
 
 export default Agenda;

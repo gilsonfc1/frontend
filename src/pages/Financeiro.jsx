@@ -6,35 +6,36 @@ function Financeiro() {
   const [valor, setValor] = useState("");
   const [tipo, setTipo] = useState("entrada");
 
-  const [movimentos, setMovimentos] = useState(() => {
-    const dados = localStorage.getItem("financeiro");
-    return dados ? JSON.parse(dados) : [];
+  const [lancamentos, setLancamentos] = useState(() => {
+    const dadosSalvos = localStorage.getItem("lancamentos");
+
+    return dadosSalvos ? JSON.parse(dadosSalvos) : [];
   });
 
 
-  function adicionarMovimento() {
+  function adicionarLancamento() {
 
-    if (!descricao || !valor || isNaN(Number(valor.replace(",", ".")))) {
-  return;
-}
-   const novoMovimento = {
-  descricao,
-  valor: Number(valor.replace(",", ".")),
-  tipo
-};
+    if (descricao === "" || valor === "") {
+      return;
+    }
+
+    const novoLancamento = {
+      descricao: descricao,
+      valor: Number(valor),
+      tipo: tipo
+    };
 
 
     const novaLista = [
-      ...movimentos,
-      novoMovimento
+      ...lancamentos,
+      novoLancamento
     ];
 
 
-    setMovimentos(novaLista);
-
+    setLancamentos(novaLista);
 
     localStorage.setItem(
-      "financeiro",
+      "lancamentos",
       JSON.stringify(novaLista)
     );
 
@@ -45,60 +46,49 @@ function Financeiro() {
   }
 
 
-  const entradas = movimentos
-  .filter(item => item.tipo.toLowerCase() === "entrada")
-  .reduce((total, item) => total + Number(item.valor), 0);
+  const saldo = lancamentos.reduce((total, item) => {
 
+    if (item.tipo === "entrada") {
+      return total + item.valor;
+    }
 
-  const despesas = movimentos
-    .filter(item => item.tipo === "saida")
-    .reduce((total, item) => total + item.valor, 0);
+    return total - item.valor;
 
-
-  const saldo = entradas - despesas;
+  }, 0);
 
 
   return (
     <div>
 
-      <h1>💰 Financeiro</h1>
-
+      <h1>Financeiro</h1>
 
       <h2>
-        Saldo: R$ {saldo.toFixed(2)}
+        Saldo: R$ {saldo}
       </h2>
-
-
-      <p>
-        Entradas: R$ {entradas.toFixed(2)}
-      </p>
-
-
-      <p>
-        Saídas: R$ {despesas.toFixed(2)}
-      </p>
-
-
-      <hr />
 
 
       <input
         placeholder="Descrição"
         value={descricao}
-        onChange={(e)=>setDescricao(e.target.value)}
+        onChange={(e) => setDescricao(e.target.value)}
       />
+
+      <br /><br />
 
 
       <input
         placeholder="Valor"
+        type="number"
         value={valor}
-        onChange={(e)=>setValor(e.target.value)}
+        onChange={(e) => setValor(e.target.value)}
       />
+
+      <br /><br />
 
 
       <select
         value={tipo}
-        onChange={(e)=>setTipo(e.target.value)}
+        onChange={(e) => setTipo(e.target.value)}
       >
 
         <option value="entrada">
@@ -112,41 +102,22 @@ function Financeiro() {
       </select>
 
 
-      <button onClick={adicionarMovimento}>
-        Adicionar
+      <br /><br />
+
+
+      <button onClick={adicionarLancamento}>
+        Novo lançamento
       </button>
-<button
-  onClick={() => {
-    localStorage.removeItem("financeiro");
-    setMovimentos([]);
-  }}
-  style={{
-    marginLeft: "10px",
-    background: "#dc2626",
-    color: "white",
-    padding: "8px",
-    border: "none",
-    borderRadius: "6px"
-  }}
->
-  Limpar Histórico
-</button>
-
-      <h2>
-        Histórico
-      </h2>
 
 
-      {movimentos.map((item,index)=>(
+      <h2>Lançamentos</h2>
 
-        <div key={index}>
 
-          {item.descricao} -
-          R$ {item.valor}
+      {lancamentos.map((item, index) => (
 
-          ({item.tipo})
-
-        </div>
+        <p key={index}>
+          {item.descricao} - R$ {item.valor} - {item.tipo}
+        </p>
 
       ))}
 
@@ -154,6 +125,5 @@ function Financeiro() {
     </div>
   );
 }
-
 
 export default Financeiro;

@@ -1,128 +1,91 @@
-import { useState, useEffect } from "react";
-
 function Dashboard() {
 
-  const [clientes, setClientes] = useState(0);
-  const [entradas, setEntradas] = useState(0);
-  const [saidas, setSaidas] = useState(0);
+  const clientes = JSON.parse(
+    localStorage.getItem("clientes")
+  ) || [];
 
 
-  useEffect(() => {
-
-    const listaClientes = JSON.parse(
-      localStorage.getItem("clientes") || "[]"
-    );
-
-    setClientes(listaClientes.length);
+  const agendamentos = JSON.parse(
+    localStorage.getItem("agendamentos")
+  ) || [];
 
 
-    const movimentos = JSON.parse(
-      localStorage.getItem("financeiro") || "[]"
-    );
+  const lancamentos = JSON.parse(
+    localStorage.getItem("lancamentos")
+  ) || [];
 
 
-    const totalEntradas = movimentos
-      .filter(item => item.tipo === "entrada")
-      .reduce(
-        (total, item) => total + Number(item.valor),
-        0
-      );
+  const saldo = lancamentos.reduce((total, item) => {
 
+    if (item.tipo === "entrada") {
+      return total + item.valor;
+    }
 
-    const totalSaidas = movimentos
-      .filter(item => item.tipo === "saida")
-      .reduce(
-        (total, item) => total + Number(item.valor),
-        0
-      );
+    return total - item.valor;
 
-
-    setEntradas(totalEntradas);
-    setSaidas(totalSaidas);
-
-
-  }, []);
-
+  }, 0);
 
 
   return (
-
     <div>
 
-      <h1>Olá, Gilson 👋</h1>
+      <h1>Dashboard</h1>
 
-      <p>
-        Controle seu negócio usando inteligência artificial.
-      </p>
+      <h2>Resumo do NegócioAI</h2>
 
 
       <div
         style={{
-          display:"flex",
-          gap:"20px",
-          marginTop:"30px"
+          display: "flex",
+          gap: "20px"
         }}
       >
 
 
-        <Card
-          titulo="👥 Clientes"
-          valor={clientes}
-        />
+        <div
+          style={{
+            border: "1px solid #ddd",
+            padding: "20px",
+            borderRadius: "10px",
+            width: "200px"
+          }}
+        >
+          <h3>👥 Clientes</h3>
+          <h1>{clientes.length}</h1>
+        </div>
 
 
-        <Card
-          titulo="💰 Faturamento"
-          valor={`R$ ${entradas.toFixed(2)}`}
-        />
+        <div
+          style={{
+            border: "1px solid #ddd",
+            padding: "20px",
+            borderRadius: "10px",
+            width: "200px"
+          }}
+        >
+          <h3>📅 Agenda</h3>
+          <h1>{agendamentos.length}</h1>
+        </div>
 
 
-        <Card
-          titulo="📉 Despesas"
-          valor={`R$ ${saidas.toFixed(2)}`}
-        />
-
-
-        <Card
-          titulo="💵 Saldo"
-          valor={`R$ ${(entradas-saidas).toFixed(2)}`}
-        />
+        <div
+          style={{
+            border: "1px solid #ddd",
+            padding: "20px",
+            borderRadius: "10px",
+            width: "200px"
+          }}
+        >
+          <h3>💰 Saldo</h3>
+          <h1>R$ {saldo}</h1>
+        </div>
 
 
       </div>
 
 
     </div>
-
   );
-
 }
-
-
-
-function Card({titulo, valor}) {
-
-  return (
-
-    <div
-      style={{
-        background:"white",
-        padding:"25px",
-        borderRadius:"12px",
-        width:"200px",
-        boxShadow:"0 2px 8px #ddd"
-      }}
-    >
-
-      <h3>{titulo}</h3>
-
-      <h2>{valor}</h2>
-
-    </div>
-
-  );
-
-}
-
 
 export default Dashboard;

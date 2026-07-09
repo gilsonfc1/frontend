@@ -18,30 +18,43 @@ function Clientes() {
       return;
     }
 
+
     const novoCliente = {
-      nome: nome,
-      telefone: telefone
+      nome,
+      telefone
     };
 
-    const novaLista = [...clientes, novoCliente];
+
+    const novaLista = [
+      ...clientes,
+      novoCliente
+    ];
+
 
     setClientes(novaLista);
+
 
     localStorage.setItem(
       "clientes",
       JSON.stringify(novaLista)
     );
 
+
     setNome("");
     setTelefone("");
+
   }
 
 
   function excluirCliente(index) {
 
-    const novaLista = clientes.filter((_, i) => i !== index);
+    const novaLista = clientes.filter(
+      (_, i) => i !== index
+    );
+
 
     setClientes(novaLista);
+
 
     localStorage.setItem(
       "clientes",
@@ -51,35 +64,45 @@ function Clientes() {
   }
 
 
+
   return (
+
     <div>
 
-      <h1>Clientes</h1>
+      <h1>👥 Clientes</h1>
 
 
-      <input
-        placeholder="Nome do cliente"
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
-      />
+      <div className="card">
+
+        <h3>Novo cliente</h3>
 
 
-      <br /><br />
+        <input
+          placeholder="Nome do cliente"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+        />
 
 
-      <input
-        placeholder="Telefone"
-        value={telefone}
-        onChange={(e) => setTelefone(e.target.value)}
-      />
+        <br /><br />
 
 
-      <br /><br />
+        <input
+          placeholder="Telefone"
+          value={telefone}
+          onChange={(e) => setTelefone(e.target.value)}
+        />
 
 
-      <button onClick={cadastrarCliente}>
-        Cadastrar cliente
-      </button>
+        <br /><br />
+
+
+        <button onClick={cadastrarCliente}>
+          Cadastrar cliente
+        </button>
+
+      </div>
+
 
 
       <h2>Lista de clientes</h2>
@@ -87,18 +110,21 @@ function Clientes() {
 
       {clientes.map((cliente, index) => (
 
-        <div key={index}>
+        <div className="card" key={index}>
+
+          <h3>{cliente.nome}</h3>
 
           <p>
-            {cliente.nome} - {cliente.telefone}
-
-            <button
-              onClick={() => excluirCliente(index)}
-            >
-              Excluir
-            </button>
-
+            📞 {cliente.telefone}
           </p>
+
+
+          <button
+            onClick={() => excluirCliente(index)}
+          >
+            Excluir
+          </button>
+
 
         </div>
 
@@ -106,7 +132,10 @@ function Clientes() {
 
 
     </div>
+
   );
+
 }
+
 
 export default Clientes;

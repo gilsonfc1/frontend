@@ -20,17 +20,15 @@ function Financeiro() {
     }
 
     const novoLancamento = {
-      descricao: descricao,
+      descricao,
       valor: Number(valor),
-      tipo: tipo
+      tipo
     };
-
 
     const novaLista = [
       ...lancamentos,
       novoLancamento
     ];
-
 
     setLancamentos(novaLista);
 
@@ -39,9 +37,9 @@ function Financeiro() {
       JSON.stringify(novaLista)
     );
 
-
     setDescricao("");
     setValor("");
+    setTipo("entrada");
 
   }
 
@@ -58,72 +56,92 @@ function Financeiro() {
 
 
   return (
+
     <div>
 
-      <h1>Financeiro</h1>
+      <h1>💰 Financeiro</h1>
 
-      <h2>
-        Saldo: R$ {saldo}
-      </h2>
+      <div className="card">
 
+        <h2>Saldo atual</h2>
 
-      <input
-        placeholder="Descrição"
-        value={descricao}
-        onChange={(e) => setDescricao(e.target.value)}
-      />
+        <strong>
+          R$ {saldo.toFixed(2)}
+        </strong>
 
-      <br /><br />
+      </div>
 
+      <br />
 
-      <input
-        placeholder="Valor"
-        type="number"
-        value={valor}
-        onChange={(e) => setValor(e.target.value)}
-      />
+      <div className="card">
 
-      <br /><br />
+        <h3>Novo lançamento</h3>
 
+        <input
+          placeholder="Descrição"
+          value={descricao}
+          onChange={(e) => setDescricao(e.target.value)}
+        />
 
-      <select
-        value={tipo}
-        onChange={(e) => setTipo(e.target.value)}
-      >
+        <br /><br />
 
-        <option value="entrada">
-          Entrada
-        </option>
+        <input
+          type="number"
+          placeholder="Valor"
+          value={valor}
+          onChange={(e) => setValor(e.target.value)}
+        />
 
-        <option value="saida">
-          Saída
-        </option>
+        <br /><br />
 
-      </select>
+        <select
+          value={tipo}
+          onChange={(e) => setTipo(e.target.value)}
+        >
+          <option value="entrada">
+            Entrada
+          </option>
 
+          <option value="saida">
+            Saída
+          </option>
+        </select>
 
-      <br /><br />
+        <br /><br />
 
+        <button onClick={adicionarLancamento}>
+          Adicionar lançamento
+        </button>
 
-      <button onClick={adicionarLancamento}>
-        Novo lançamento
-      </button>
-
+      </div>
 
       <h2>Lançamentos</h2>
 
-
       {lancamentos.map((item, index) => (
 
-        <p key={index}>
-          {item.descricao} - R$ {item.valor} - {item.tipo}
-        </p>
+        <div
+          className="card"
+          key={index}
+        >
+
+          <h3>{item.descricao}</h3>
+
+          <p>
+            {item.tipo === "entrada" ? "🟢 Entrada" : "🔴 Saída"}
+          </p>
+
+          <p>
+            R$ {item.valor.toFixed(2)}
+          </p>
+
+        </div>
 
       ))}
 
-
     </div>
+
   );
+
 }
 
 export default Financeiro;

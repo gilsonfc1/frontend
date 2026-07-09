@@ -37,47 +37,27 @@ function Dashboard() {
       <div
         style={{
           display: "flex",
-          gap: "20px"
+          gap: "20px",
+          flexWrap: "wrap"
         }}
       >
 
 
-        <div
-          style={{
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "10px",
-            width: "200px"
-          }}
-        >
+        <div className="card">
           <h3>👥 Clientes</h3>
-          <h1>{clientes.length}</h1>
+          <strong>{clientes.length}</strong>
         </div>
 
 
-        <div
-          style={{
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "10px",
-            width: "200px"
-          }}
-        >
+        <div className="card">
           <h3>📅 Agenda</h3>
-          <h1>{agendamentos.length}</h1>
+          <strong>{agendamentos.length}</strong>
         </div>
 
 
-        <div
-          style={{
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "10px",
-            width: "200px"
-          }}
-        >
+        <div className="card">
           <h3>💰 Saldo</h3>
-          <h1>R$ {saldo}</h1>
+          <strong>R$ {saldo}</strong>
         </div>
 
 

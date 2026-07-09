@@ -12,7 +12,6 @@ function Agenda() {
     return dadosSalvos ? JSON.parse(dadosSalvos) : [];
   });
 
-
   const clientes = JSON.parse(
     localStorage.getItem("clientes")
   ) || [];
@@ -30,21 +29,17 @@ function Agenda() {
       horario
     };
 
-
     const novaLista = [
       ...agendamentos,
       novoAgendamento
     ];
 
-
     setAgendamentos(novaLista);
-
 
     localStorage.setItem(
       "agendamentos",
       JSON.stringify(novaLista)
     );
-
 
     setCliente("");
     setData("");
@@ -54,55 +49,61 @@ function Agenda() {
 
 
   return (
+
     <div>
 
-      <h1>Agenda</h1>
+      <h1>📅 Agenda</h1>
 
 
-      <select
-        value={cliente}
-        onChange={(e) => setCliente(e.target.value)}
-      >
+      <div className="card">
 
-        <option value="">
-          Selecione o cliente
-        </option>
+        <h3>Novo agendamento</h3>
 
-        {clientes.map((c, index) => (
-          <option key={index} value={c.nome}>
-            {c.nome}
+        <select
+          value={cliente}
+          onChange={(e) => setCliente(e.target.value)}
+        >
+
+          <option value="">
+            Selecione o cliente
           </option>
-        ))}
 
-      </select>
+          {clientes.map((c, index) => (
+            <option
+              key={index}
+              value={c.nome}
+            >
+              {c.nome}
+            </option>
+          ))}
 
+        </select>
 
-      <br /><br />
+        <br /><br />
 
+        <input
+          type="date"
+          value={data}
+          onChange={(e) => setData(e.target.value)}
+        />
 
-      <input
-        type="date"
-        value={data}
-        onChange={(e) => setData(e.target.value)}
-      />
+        <br /><br />
 
+        <input
+          type="time"
+          value={horario}
+          onChange={(e) => setHorario(e.target.value)}
+        />
 
-      <br /><br />
+        <br /><br />
 
+        <button
+          onClick={criarAgendamento}
+        >
+          Criar agendamento
+        </button>
 
-      <input
-        type="time"
-        value={horario}
-        onChange={(e) => setHorario(e.target.value)}
-      />
-
-
-      <br /><br />
-
-
-      <button onClick={criarAgendamento}>
-        Criar agendamento
-      </button>
+      </div>
 
 
       <h2>Compromissos</h2>
@@ -110,15 +111,25 @@ function Agenda() {
 
       {agendamentos.map((item, index) => (
 
-        <p key={index}>
-          {item.cliente} - {item.data} - {item.horario}
-        </p>
+        <div
+          className="card"
+          key={index}
+        >
+
+          <h3>{item.cliente}</h3>
+
+          <p>📅 {item.data}</p>
+
+          <p>🕒 {item.horario}</p>
+
+        </div>
 
       ))}
 
-
     </div>
+
   );
+
 }
 
 export default Agenda;

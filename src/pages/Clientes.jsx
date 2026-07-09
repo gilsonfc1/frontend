@@ -4,12 +4,31 @@ function Clientes() {
 
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [busca, setBusca] = useState("");
+  const [editando, setEditando] = useState(null);
+
 
   const [clientes, setClientes] = useState(() => {
+
     const dadosSalvos = localStorage.getItem("clientes");
 
     return dadosSalvos ? JSON.parse(dadosSalvos) : [];
+
   });
+
+
+
+  function salvarClientes(lista) {
+
+    setClientes(lista);
+
+    localStorage.setItem(
+      "clientes",
+      JSON.stringify(lista)
+    );
+
+  }
+
 
 
   function cadastrarCliente() {
@@ -25,19 +44,10 @@ function Clientes() {
     };
 
 
-    const novaLista = [
+    salvarClientes([
       ...clientes,
       novoCliente
-    ];
-
-
-    setClientes(novaLista);
-
-
-    localStorage.setItem(
-      "clientes",
-      JSON.stringify(novaLista)
-    );
+    ]);
 
 
     setNome("");
@@ -46,22 +56,82 @@ function Clientes() {
   }
 
 
+
   function excluirCliente(index) {
+
+    const confirmar = window.confirm(
+      "Deseja excluir este cliente?"
+    );
+
+
+    if (!confirmar) {
+      return;
+    }
+
 
     const novaLista = clientes.filter(
       (_, i) => i !== index
     );
 
 
-    setClientes(novaLista);
-
-
-    localStorage.setItem(
-      "clientes",
-      JSON.stringify(novaLista)
-    );
+    salvarClientes(novaLista);
 
   }
+
+
+
+  function editarCliente(index) {
+
+    const cliente = clientes[index];
+
+
+    setNome(cliente.nome);
+    setTelefone(cliente.telefone);
+
+    setEditando(index);
+
+  }
+
+
+
+  function atualizarCliente() {
+
+
+    const novaLista = clientes.map(
+      (cliente, index) => {
+
+        if (index === editando) {
+
+          return {
+            nome,
+            telefone
+          };
+
+        }
+
+        return cliente;
+
+      }
+    );
+
+
+    salvarClientes(novaLista);
+
+
+    setNome("");
+    setTelefone("");
+    setEditando(null);
+
+  }
+
+
+
+  const clientesFiltrados = clientes.filter(
+    (cliente) =>
+      cliente.nome
+      .toLowerCase()
+      .includes(busca.toLowerCase())
+  );
 
 
 
@@ -69,12 +139,18 @@ function Clientes() {
 
     <div>
 
+
       <h1>👥 Clientes</h1>
 
 
       <div className="card">
 
-        <h3>Novo cliente</h3>
+
+        <h3>
+          {editando !== null
+            ? "Editar cliente"
+            : "Novo cliente"}
+        </h3>
 
 
         <input
@@ -97,22 +173,50 @@ function Clientes() {
         <br /><br />
 
 
-        <button onClick={cadastrarCliente}>
-          Cadastrar cliente
-        </button>
+        {editando !== null ? (
+
+          <button onClick={atualizarCliente}>
+            Salvar alteração
+          </button>
+
+        ) : (
+
+          <button onClick={cadastrarCliente}>
+            Cadastrar cliente
+          </button>
+
+        )}
+
 
       </div>
+
+
+
+      <h2>Buscar cliente</h2>
+
+
+      <input
+        placeholder="Digite o nome"
+        value={busca}
+        onChange={(e) => setBusca(e.target.value)}
+      />
 
 
 
       <h2>Lista de clientes</h2>
 
 
-      {clientes.map((cliente, index) => (
+
+      {clientesFiltrados.map((cliente, index) => (
+
 
         <div className="card" key={index}>
 
-          <h3>{cliente.nome}</h3>
+
+          <h3>
+            {cliente.nome}
+          </h3>
+
 
           <p>
             📞 {cliente.telefone}
@@ -120,13 +224,21 @@ function Clientes() {
 
 
           <button
+            onClick={() => editarCliente(index)}
+          >
+            ✏️ Editar
+          </button>
+
+
+          <button
             onClick={() => excluirCliente(index)}
           >
-            Excluir
+            🗑️ Excluir
           </button>
 
 
         </div>
+
 
       ))}
 

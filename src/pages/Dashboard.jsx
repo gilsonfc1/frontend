@@ -2,44 +2,76 @@ function Dashboard() {
 
 
   const clientes = JSON.parse(
+
     localStorage.getItem("clientes")
+
   ) || [];
+
 
 
   const agendamentos = JSON.parse(
+
     localStorage.getItem("agendamentos")
+
   ) || [];
+
 
 
   const lancamentos = JSON.parse(
+
     localStorage.getItem("lancamentos")
+
   ) || [];
 
 
 
-  const entradas = lancamentos
-    .filter(item => item.tipo === "entrada")
-    .reduce(
-      (total, item) => total + item.valor,
-      0
-    );
+
+  const entradas = lancamentos.reduce(
+
+    (total, item) => {
+
+      if (item.tipo === "entrada") {
+
+        return total + item.valor;
+
+      }
+
+      return total;
+
+    },
+
+    0
+
+  );
 
 
 
-  const saidas = lancamentos
-    .filter(item => item.tipo === "saida")
-    .reduce(
-      (total, item) => total + item.valor,
-      0
-    );
+
+
+  const saidas = lancamentos.reduce(
+
+    (total, item) => {
+
+      if (item.tipo === "saida") {
+
+        return total + item.valor;
+
+      }
+
+      return total;
+
+    },
+
+    0
+
+  );
+
+
 
 
 
   const saldo = entradas - saidas;
 
-
-
-  const ultimosLancamentos = lancamentos.slice(-5).reverse();
 
 
 
@@ -48,7 +80,10 @@ function Dashboard() {
     <div>
 
 
-      <h1>📊 Dashboard</h1>
+      <h1>
+        📊 Dashboard
+      </h1>
+
 
 
       <h2>
@@ -57,19 +92,28 @@ function Dashboard() {
 
 
 
+
       <div
+
         style={{
+
           display: "flex",
+
           gap: "20px",
+
           flexWrap: "wrap"
+
         }}
+
       >
 
 
 
         <div className="card">
 
-          <h3>👥 Clientes</h3>
+          <h3>
+            👥 Clientes
+          </h3>
 
           <strong>
             {clientes.length}
@@ -80,9 +124,12 @@ function Dashboard() {
 
 
 
+
         <div className="card">
 
-          <h3>📅 Agenda</h3>
+          <h3>
+            📅 Agendamentos
+          </h3>
 
           <strong>
             {agendamentos.length}
@@ -93,12 +140,17 @@ function Dashboard() {
 
 
 
+
         <div className="card">
 
-          <h3>🟢 Entradas</h3>
+          <h3>
+            🟢 Entradas
+          </h3>
 
           <strong>
+
             R$ {entradas.toFixed(2)}
+
           </strong>
 
         </div>
@@ -106,12 +158,17 @@ function Dashboard() {
 
 
 
+
         <div className="card">
 
-          <h3>🔴 Saídas</h3>
+          <h3>
+            🔴 Saídas
+          </h3>
 
           <strong>
+
             R$ {saidas.toFixed(2)}
+
           </strong>
 
         </div>
@@ -119,12 +176,17 @@ function Dashboard() {
 
 
 
+
         <div className="card">
 
-          <h3>💰 Saldo</h3>
+          <h3>
+            💰 Saldo atual
+          </h3>
 
           <strong>
+
             R$ {saldo.toFixed(2)}
+
           </strong>
 
         </div>
@@ -135,52 +197,12 @@ function Dashboard() {
 
 
 
-      <h2>
-        Últimos lançamentos
-      </h2>
-
-
-
-
-      {ultimosLancamentos.map(
-        (item, index) => (
-
-          <div
-            className="card"
-            key={index}
-          >
-
-            <h3>
-              {item.descricao}
-            </h3>
-
-
-            <p>
-              {item.tipo === "entrada"
-                ? "🟢 Entrada"
-                : "🔴 Saída"
-              }
-            </p>
-
-
-            <p>
-              R$ {item.valor.toFixed(2)}
-            </p>
-
-
-          </div>
-
-        )
-
-      )}
-
-
-
     </div>
 
   );
 
+
 }
 
 
-export default Dashboard;
+export default Dashboard; 

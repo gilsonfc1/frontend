@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Mensagem from "./Mensagem";
 
 
@@ -10,6 +10,8 @@ function Clientes() {
   const [busca, setBusca] = useState("");
   const [editando, setEditando] = useState(null);
   const [mensagem, setMensagem] = useState("");
+
+  const formularioRef = useRef(null);
 
 
 
@@ -38,6 +40,7 @@ function Clientes() {
 
 
 
+
   function mostrarMensagem(texto) {
 
     setMensagem(texto);
@@ -50,6 +53,7 @@ function Clientes() {
     }, 3000);
 
   }
+
 
 
 
@@ -100,6 +104,7 @@ function Clientes() {
 
 
 
+
   function excluirCliente(index) {
 
 
@@ -138,6 +143,7 @@ function Clientes() {
 
 
 
+
   function editarCliente(index) {
 
 
@@ -146,11 +152,24 @@ function Clientes() {
 
     setNome(cliente.nome);
     setTelefone(cliente.telefone);
-
     setEditando(index);
 
 
+
+    setTimeout(() => {
+
+      formularioRef.current.scrollIntoView({
+
+        behavior: "smooth"
+
+      });
+
+
+    }, 100);
+
+
   }
+
 
 
 
@@ -204,6 +223,8 @@ function Clientes() {
 
 
 
+
+
   const clientesFiltrados = clientes.filter(
 
     (cliente) =>
@@ -219,20 +240,30 @@ function Clientes() {
 
 
 
+
+
   return (
 
 
     <div>
 
 
-      <h1>👥 Clientes</h1>
+      <h1>
+        👥 Clientes
+      </h1>
+
 
 
       <Mensagem texto={mensagem} />
 
 
 
-      <div className="card">
+
+
+      <div
+        className="card"
+        ref={formularioRef}
+      >
 
 
         <h3>
@@ -246,6 +277,7 @@ function Clientes() {
           }
 
         </h3>
+
 
 
 
@@ -285,37 +317,30 @@ function Clientes() {
 
 
 
-        {
 
-          editando !== null ?
-
-
-          (
-
-            <button onClick={atualizarCliente}>
-
-              Salvar alteração
-
-            </button>
-
-          )
+        {editando !== null ? (
 
 
-          :
+          <button onClick={atualizarCliente}>
+
+            Salvar alteração
+
+          </button>
 
 
-          (
-
-            <button onClick={cadastrarCliente}>
-
-              Cadastrar cliente
-
-            </button>
-
-          )
+        ) : (
 
 
-        }
+          <button onClick={cadastrarCliente}>
+
+            Cadastrar cliente
+
+          </button>
+
+
+        )}
+
+
 
 
 
@@ -324,9 +349,11 @@ function Clientes() {
 
 
 
+
       <h2>
         Buscar cliente
       </h2>
+
 
 
 
@@ -345,6 +372,7 @@ function Clientes() {
 
 
 
+
       <h2>
         Lista de clientes
       </h2>
@@ -352,74 +380,72 @@ function Clientes() {
 
 
 
-      {
 
-        clientesFiltrados.map(
+      {clientesFiltrados.map(
 
-          (cliente, index) => (
+        (cliente, index) => (
 
 
-            <div
+          <div
 
-              className="card"
+            className="card"
 
-              key={index}
+            key={index}
+
+          >
+
+
+            <h3>
+              {cliente.nome}
+            </h3>
+
+
+
+            <p>
+              📞 {cliente.telefone}
+            </p>
+
+
+
+
+            <button
+
+              onClick={() =>
+                editarCliente(index)
+              }
 
             >
 
+              ✏️ Editar
 
-              <h3>
-
-                {cliente.nome}
-
-              </h3>
+            </button>
 
 
 
-              <p>
 
-                📞 {cliente.telefone}
+            <button
 
-              </p>
+              onClick={() =>
+                excluirCliente(index)
+              }
 
+            >
 
+              🗑️ Excluir
 
-              <button
-
-                onClick={() =>
-                  editarCliente(index)
-                }
-
-              >
-
-                ✏️ Editar
-
-              </button>
+            </button>
 
 
 
-              <button
 
-                onClick={() =>
-                  excluirCliente(index)
-                }
+          </div>
 
-              >
-
-                🗑️ Excluir
-
-              </button>
-
-
-
-            </div>
-
-
-          )
 
         )
 
-      }
+      )}
+
+
 
 
 

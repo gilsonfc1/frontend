@@ -1,14 +1,14 @@
 import { useState } from "react";
 import Mensagem from "./Mensagem";
 
-
 function Agenda() {
-
 
   const [cliente, setCliente] = useState("");
   const [data, setData] = useState("");
   const [horario, setHorario] = useState("");
   const [mensagem, setMensagem] = useState("");
+
+  const [editando, setEditando] = useState(null);
 
 
   const [agendamentos, setAgendamentos] = useState(() => {
@@ -29,6 +29,7 @@ function Agenda() {
 
 
 
+
   function salvarAgendamentos(lista) {
 
     setAgendamentos(lista);
@@ -39,6 +40,8 @@ function Agenda() {
     );
 
   }
+
+
 
 
 
@@ -53,6 +56,9 @@ function Agenda() {
     }, 3000);
 
   }
+
+
+
 
 
 
@@ -94,9 +100,7 @@ function Agenda() {
 
 
 
-    setCliente("");
-    setData("");
-    setHorario("");
+    limparFormulario();
 
 
     mostrarMensagem(
@@ -105,17 +109,106 @@ function Agenda() {
 
 
   }
-    function excluirAgendamento(index) {
 
 
-    const novaLista = agendamentos.filter(
 
-      (_, i) => i !== index
+
+
+
+  function editarAgendamento(index) {
+
+
+    const item = agendamentos[index];
+
+
+    setCliente(item.cliente);
+    setData(item.data);
+    setHorario(item.horario);
+
+    setEditando(index);
+
+
+  }
+
+
+
+
+
+
+  function atualizarAgendamento() {
+
+
+    const novaLista = agendamentos.map(
+
+      (item,index)=>{
+
+
+        if(index === editando){
+
+          return {
+
+            cliente,
+            data,
+            horario
+
+          };
+
+        }
+
+
+        return item;
+
+
+      }
 
     );
 
 
+
     salvarAgendamentos(novaLista);
+
+
+    limparFormulario();
+
+
+    mostrarMensagem(
+      "Agendamento atualizado com sucesso!"
+    );
+
+
+  }
+
+
+
+
+
+
+  function excluirAgendamento(index) {
+
+
+    const confirmar = window.confirm(
+      "Deseja excluir este agendamento?"
+    );
+
+
+    if(!confirmar){
+
+      return;
+
+    }
+
+
+
+    const novaLista = agendamentos.filter(
+
+      (_,i)=> i !== index
+
+    );
+
+
+
+    salvarAgendamentos(novaLista);
+
 
 
     mostrarMensagem(
@@ -127,15 +220,37 @@ function Agenda() {
 
 
 
+
+
+
+  function limparFormulario(){
+
+    setCliente("");
+    setData("");
+    setHorario("");
+    setEditando(null);
+
+  }
+
+
+
+
+
+
   return (
 
     <div>
 
 
-      <h1>📅 Agenda</h1>
+      <h1>
+        📅 Agenda
+      </h1>
 
 
-      <Mensagem texto={mensagem} />
+
+      <Mensagem texto={mensagem}/>
+
+
 
 
 
@@ -143,8 +258,15 @@ function Agenda() {
 
 
         <h3>
-          Novo agendamento
+
+          {editando !== null
+            ? "Editar agendamento"
+            : "Novo agendamento"
+          }
+
         </h3>
+
+
 
 
 
@@ -152,7 +274,7 @@ function Agenda() {
 
           value={cliente}
 
-          onChange={(e) =>
+          onChange={(e)=>
             setCliente(e.target.value)
           }
 
@@ -163,14 +285,11 @@ function Agenda() {
           </option>
 
 
-          {clientes.map((c, index) => (
+          {clientes.map((c,index)=>(
 
             <option
-
               key={index}
-
               value={c.nome}
-
             >
 
               {c.nome}
@@ -184,7 +303,9 @@ function Agenda() {
 
 
 
-        <br /><br />
+
+        <br/><br/>
+
 
 
 
@@ -194,7 +315,7 @@ function Agenda() {
 
           value={data}
 
-          onChange={(e) =>
+          onChange={(e)=>
             setData(e.target.value)
           }
 
@@ -202,7 +323,8 @@ function Agenda() {
 
 
 
-        <br /><br />
+        <br/><br/>
+
 
 
 
@@ -212,7 +334,7 @@ function Agenda() {
 
           value={horario}
 
-          onChange={(e) =>
+          onChange={(e)=>
             setHorario(e.target.value)
           }
 
@@ -220,34 +342,57 @@ function Agenda() {
 
 
 
-        <br /><br />
+        <br/><br/>
 
 
 
-        <button
 
-          onClick={criarAgendamento}
 
-        >
+        {editando !== null ? (
 
-          Criar agendamento
+          <button onClick={atualizarAgendamento}>
 
-        </button>
+            Salvar alteração
+
+          </button>
+
+
+        ) : (
+
+          <button onClick={criarAgendamento}>
+
+            Criar agendamento
+
+          </button>
+
+        )}
+
 
 
       </div>
-            <h2>
+
+
+
+
+
+
+      <h2>
         Compromissos
       </h2>
 
 
 
-      {agendamentos.map((item, index) => (
+
+
+      {agendamentos.map((item,index)=>(
 
 
         <div
+
           className="card"
+
           key={index}
+
         >
 
 
@@ -269,9 +414,27 @@ function Agenda() {
 
 
 
+
+
           <button
 
-            onClick={() =>
+            onClick={()=>
+              editarAgendamento(index)
+            }
+
+          >
+
+            ✏️ Editar
+
+          </button>
+
+
+
+
+
+          <button
+
+            onClick={()=>
               excluirAgendamento(index)
             }
 
@@ -282,6 +445,7 @@ function Agenda() {
           </button>
 
 
+
         </div>
 
 
@@ -289,10 +453,10 @@ function Agenda() {
 
 
 
+
     </div>
 
   );
-
 
 }
 

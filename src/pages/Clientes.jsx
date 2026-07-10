@@ -1,12 +1,13 @@
 import { useState, useRef } from "react";
 import Mensagem from "./Mensagem";
 
-
 function Clientes() {
-
 
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [email, setEmail] = useState("");
+  const [observacao, setObservacao] = useState("");
+
   const [busca, setBusca] = useState("");
   const [editando, setEditando] = useState(null);
   const [mensagem, setMensagem] = useState("");
@@ -14,13 +15,12 @@ function Clientes() {
   const formularioRef = useRef(null);
 
 
-
   const [clientes, setClientes] = useState(() => {
 
-    const dadosSalvos = localStorage.getItem("clientes");
+    const dados = localStorage.getItem("clientes");
 
-    return dadosSalvos
-      ? JSON.parse(dadosSalvos)
+    return dados
+      ? JSON.parse(dados)
       : [];
 
   });
@@ -40,11 +40,9 @@ function Clientes() {
 
 
 
-
   function mostrarMensagem(texto) {
 
     setMensagem(texto);
-
 
     setTimeout(() => {
 
@@ -56,15 +54,25 @@ function Clientes() {
 
 
 
+  function limparFormulario() {
+
+    setNome("");
+    setTelefone("");
+    setEmail("");
+    setObservacao("");
+    setEditando(null);
+
+  }
+
 
 
   function cadastrarCliente() {
 
 
-    if (nome === "") {
+    if (!nome.trim()) {
 
       mostrarMensagem(
-        "Digite o nome do cliente"
+        "Informe o nome do cliente"
       );
 
       return;
@@ -75,8 +83,17 @@ function Clientes() {
 
     const novoCliente = {
 
+      id: Date.now(),
+
       nome,
-      telefone
+
+      telefone,
+
+      email,
+
+      observacao,
+
+      criadoEm: new Date().toLocaleDateString()
 
     };
 
@@ -85,14 +102,15 @@ function Clientes() {
     salvarClientes([
 
       ...clientes,
+
       novoCliente
 
     ]);
 
 
 
-    setNome("");
-    setTelefone("");
+    limparFormulario();
+
 
     mostrarMensagem(
       "Cliente cadastrado com sucesso!"
@@ -103,55 +121,20 @@ function Clientes() {
 
 
 
-
-
-  function excluirCliente(index) {
-
-
-    const confirmar = window.confirm(
-      "Deseja excluir este cliente?"
-    );
-
-
-    if (!confirmar) {
-
-      return;
-
-    }
-
-
-
-    const novaLista = clientes.filter(
-
-      (_, i) => i !== index
-
-    );
-
-
-
-    salvarClientes(novaLista);
-
-
-
-    mostrarMensagem(
-      "Cliente removido com sucesso!"
-    );
-
-
-  }
-
-
-
-
-
   function editarCliente(index) {
 
 
     const cliente = clientes[index];
 
 
-    setNome(cliente.nome);
-    setTelefone(cliente.telefone);
+    setNome(cliente.nome || "");
+
+    setTelefone(cliente.telefone || "");
+
+    setEmail(cliente.email || "");
+
+    setObservacao(cliente.observacao || "");
+
     setEditando(index);
 
 
@@ -164,8 +147,7 @@ function Clientes() {
 
       });
 
-
-    }, 100);
+    },100);
 
 
   }
@@ -173,21 +155,27 @@ function Clientes() {
 
 
 
-
   function atualizarCliente() {
 
 
-    const novaLista = clientes.map(
+    const listaAtualizada = clientes.map(
 
-      (cliente, index) => {
+      (cliente,index)=>{
 
 
-        if (index === editando) {
+        if(index === editando){
 
           return {
 
+            ...cliente,
+
             nome,
-            telefone
+
+            telefone,
+
+            email,
+
+            observacao
 
           };
 
@@ -196,21 +184,16 @@ function Clientes() {
 
         return cliente;
 
-
       }
 
     );
 
 
 
-    salvarClientes(novaLista);
+    salvarClientes(listaAtualizada);
 
 
-
-    setNome("");
-    setTelefone("");
-    setEditando(null);
-
+    limparFormulario();
 
 
     mostrarMensagem(
@@ -224,26 +207,65 @@ function Clientes() {
 
 
 
+  function excluirCliente(index) {
+
+
+    const confirmar = window.confirm(
+
+      "Deseja remover este cliente?"
+
+    );
+
+
+    if(!confirmar){
+
+      return;
+
+    }
+
+
+
+    const novaLista = clientes.filter(
+
+      (_,i)=> i !== index
+
+    );
+
+
+
+    salvarClientes(novaLista);
+
+
+
+    mostrarMensagem(
+      "Cliente removido!"
+    );
+
+
+  }
+
+
+
 
   const clientesFiltrados = clientes.filter(
 
-    (cliente) =>
+    (cliente)=>
 
       cliente.nome
+
       .toLowerCase()
+
       .includes(
+
         busca.toLowerCase()
+
       )
 
   );
 
 
 
-
-
-
   return (
-
 
     <div>
 
@@ -253,10 +275,13 @@ function Clientes() {
       </h1>
 
 
+      <p>
+        Total de clientes cadastrados: <strong>{clientes.length}</strong>
+      </p>
 
-      <Mensagem texto={mensagem} />
 
 
+      <Mensagem texto={mensagem}/>
 
 
 
@@ -270,9 +295,9 @@ function Clientes() {
 
           {editando !== null
 
-            ? "Editar cliente"
+          ? "Editar cliente"
 
-            : "Novo cliente"
+          : "Novo cliente"
 
           }
 
@@ -280,67 +305,93 @@ function Clientes() {
 
 
 
-
         <input
 
-          placeholder="Nome do cliente"
+          placeholder="Nome completo"
 
           value={nome}
 
-          onChange={(e) =>
-            setNome(e.target.value)
-          }
+          onChange={(e)=>setNome(e.target.value)}
 
         />
 
 
 
-        <br /><br />
+        <br/><br/>
 
 
 
         <input
 
-          placeholder="Telefone"
+          placeholder="Telefone / WhatsApp"
 
           value={telefone}
 
-          onChange={(e) =>
-            setTelefone(e.target.value)
-          }
+          onChange={(e)=>setTelefone(e.target.value)}
 
         />
 
 
 
-        <br /><br />
+        <br/><br/>
 
 
 
+        <input
 
-        {editando !== null ? (
+          placeholder="E-mail"
 
+          value={email}
 
-          <button onClick={atualizarCliente}>
+          onChange={(e)=>setEmail(e.target.value)}
 
-            Salvar alteração
-
-          </button>
-
-
-        ) : (
+        />
 
 
-          <button onClick={cadastrarCliente}>
 
-            Cadastrar cliente
-
-          </button>
+        <br/><br/>
 
 
-        )}
+
+        <input
+
+          placeholder="Observações"
+
+          value={observacao}
+
+          onChange={(e)=>setObservacao(e.target.value)}
+
+        />
 
 
+
+        <br/><br/>
+
+
+
+        {
+
+        editando !== null ?
+
+
+        <button onClick={atualizarCliente}>
+
+          Salvar alteração
+
+        </button>
+
+
+        :
+
+
+        <button onClick={cadastrarCliente}>
+
+          Cadastrar cliente
+
+        </button>
+
+
+        }
 
 
 
@@ -349,26 +400,26 @@ function Clientes() {
 
 
 
-
-      <h2>
-        Buscar cliente
-      </h2>
+      <div className="card">
 
 
+        <h3>
+          🔎 Buscar clientes
+        </h3>
 
 
-      <input
+        <input
 
-        placeholder="Digite o nome"
+          placeholder="Digite o nome"
 
-        value={busca}
+          value={busca}
 
-        onChange={(e) =>
-          setBusca(e.target.value)
-        }
+          onChange={(e)=>setBusca(e.target.value)}
 
-      />
+        />
 
+
+      </div>
 
 
 
@@ -380,17 +431,18 @@ function Clientes() {
 
 
 
+      {
 
-      {clientesFiltrados.map(
+      clientesFiltrados.map(
 
-        (cliente, index) => (
+        (cliente,index)=>(
 
 
           <div
 
             className="card"
 
-            key={index}
+            key={cliente.id || index}
 
           >
 
@@ -400,19 +452,32 @@ function Clientes() {
             </h3>
 
 
-
             <p>
-              📞 {cliente.telefone}
+              📞 {cliente.telefone || "Não informado"}
             </p>
 
 
+            <p>
+              ✉️ {cliente.email || "Não informado"}
+            </p>
+
+
+            <p>
+              📝 {cliente.observacao || "Sem observações"}
+            </p>
+
+
+            <small>
+              Cadastro: {cliente.criadoEm || "Anterior"}
+            </small>
+
+
+            <br/><br/>
 
 
             <button
 
-              onClick={() =>
-                editarCliente(index)
-              }
+              onClick={()=>editarCliente(index)}
 
             >
 
@@ -422,12 +487,9 @@ function Clientes() {
 
 
 
-
             <button
 
-              onClick={() =>
-                excluirCliente(index)
-              }
+              onClick={()=>excluirCliente(index)}
 
             >
 
@@ -436,24 +498,20 @@ function Clientes() {
             </button>
 
 
-
-
           </div>
 
 
         )
 
-      )}
+      )
 
-
+      }
 
 
 
     </div>
 
-
   );
-
 
 }
 

@@ -11,9 +11,50 @@ function Sistema() {
   const [pagina, setPagina] = useState("dashboard");
 
 
-  function classeBotao(nome) {
-    return pagina === nome ? "menu-ativo" : "";
+  const menus = [
+    {
+      id: "dashboard",
+      nome: "🏠 Painel de controle"
+    },
+    {
+      id: "clientes",
+      nome: "👥 Clientes"
+    },
+    {
+      id: "agenda",
+      nome: "📅 Agenda"
+    },
+    {
+      id: "financeiro",
+      nome: "💰 Financeiro"
+    }
+  ];
+
+
+
+  function renderPagina() {
+
+    if (pagina === "dashboard") {
+      return <Dashboard />;
+    }
+
+
+    if (pagina === "clientes") {
+      return <Clientes />;
+    }
+
+
+    if (pagina === "agenda") {
+      return <Agenda />;
+    }
+
+
+    if (pagina === "financeiro") {
+      return <Financeiro />;
+    }
+
   }
+
 
 
   return (
@@ -24,61 +65,54 @@ function Sistema() {
       <aside className="sidebar">
 
 
-        <h2>NegócioAI</h2>
+        <h2>
+          NegócioAI
+        </h2>
 
 
-        <button
-          className={classeBotao("dashboard")}
-          onClick={() => setPagina("dashboard")}
-        >
-          🏠 Painel de controle
-        </button>
+
+        <nav>
 
 
-        <button
-          className={classeBotao("clientes")}
-          onClick={() => setPagina("clientes")}
-        >
-          👥 Clientes
-        </button>
+          {menus.map((menu) => (
 
 
-        <button
-          className={classeBotao("agenda")}
-          onClick={() => setPagina("agenda")}
-        >
-          📅 Agenda
-        </button>
+            <button
+
+              key={menu.id}
+
+              className={
+                pagina === menu.id
+                  ? "menu-ativo"
+                  : ""
+              }
+
+              onClick={() => setPagina(menu.id)}
+
+            >
+
+              {menu.nome}
+
+            </button>
 
 
-        <button
-          className={classeBotao("financeiro")}
-          onClick={() => setPagina("financeiro")}
-        >
-          💰 Financeiro
-        </button>
+          ))}
+
+
+        </nav>
 
 
       </aside>
 
 
 
+
       <main className="content">
 
-
-        {pagina === "dashboard" && <Dashboard />}
-
-
-        {pagina === "clientes" && <Clientes />}
-
-
-        {pagina === "agenda" && <Agenda />}
-
-
-        {pagina === "financeiro" && <Financeiro />}
-
+        {renderPagina()}
 
       </main>
+
 
 
     </div>

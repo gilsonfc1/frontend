@@ -5,6 +5,8 @@ import Clientes from "./Clientes";
 import Agenda from "./Agenda";
 import Financeiro from "./Financeiro";
 
+import Layout from "../components/Layout";
+
 
 function Sistema({ sair }) {
 
@@ -22,7 +24,7 @@ function Sistema({ sair }) {
 
     {
       id: "dashboard",
-      nome: "🏠 Painel de controle"
+      nome: "📊 Painel de controle"
     },
 
     {
@@ -44,35 +46,26 @@ function Sistema({ sair }) {
 
 
 
-
   function renderPagina() {
 
 
     if (pagina === "dashboard") {
-
       return <Dashboard />;
-
     }
 
 
     if (pagina === "clientes") {
-
       return <Clientes />;
-
     }
 
 
     if (pagina === "agenda") {
-
       return <Agenda />;
-
     }
 
 
     if (pagina === "financeiro") {
-
       return <Financeiro />;
-
     }
 
 
@@ -80,106 +73,26 @@ function Sistema({ sair }) {
 
 
 
-
   return (
 
-    <div className="layout">
+    <Layout
+
+      menus={menus}
+
+      pagina={pagina}
+
+      setPagina={setPagina}
+
+      sair={sair}
+
+      usuario={usuario}
+
+    >
+
+      {renderPagina()}
 
 
-      <aside className="sidebar">
-
-
-        <h2>
-          NegócioAI
-        </h2>
-
-
-
-        {usuario && (
-
-          <div className="usuario">
-
-            <p>
-              👋 Olá
-            </p>
-
-            <strong>
-              {usuario.nome}
-            </strong>
-
-            <small>
-              {usuario.email}
-            </small>
-
-          </div>
-
-        )}
-
-
-
-        <nav>
-
-
-          {menus.map((menu) => (
-
-
-            <button
-
-              key={menu.id}
-
-              className={
-                pagina === menu.id
-                  ? "menu-ativo"
-                  : ""
-              }
-
-              onClick={() =>
-                setPagina(menu.id)
-              }
-
-            >
-
-              {menu.nome}
-
-            </button>
-
-
-          ))}
-
-
-
-          <button
-
-            onClick={sair}
-
-          >
-
-            🚪 Sair
-
-          </button>
-
-
-
-        </nav>
-
-
-
-      </aside>
-
-
-
-
-      <main className="content">
-
-
-        {renderPagina()}
-
-
-      </main>
-
-
-
-    </div>
+    </Layout>
 
   );
 

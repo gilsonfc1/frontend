@@ -1,33 +1,65 @@
 import { useState } from "react";
+import Mensagem from "./Mensagem";
+
 
 function Financeiro() {
+
 
   const [descricao, setDescricao] = useState("");
   const [valor, setValor] = useState("");
   const [tipo, setTipo] = useState("entrada");
-  const [editando, setEditando] = useState(null);
+  const [mensagem, setMensagem] = useState("");
+
 
 
   const [lancamentos, setLancamentos] = useState(() => {
 
     const dadosSalvos = localStorage.getItem("lancamentos");
 
-    return dadosSalvos ? JSON.parse(dadosSalvos) : [];
+    return dadosSalvos
+      ? JSON.parse(dadosSalvos)
+      : [];
 
   });
 
 
 
+
   function salvarLancamentos(lista) {
+
 
     setLancamentos(lista);
 
+
     localStorage.setItem(
+
       "lancamentos",
+
       JSON.stringify(lista)
+
     );
 
+
   }
+
+
+
+
+  function mostrarMensagem(texto) {
+
+
+    setMensagem(texto);
+
+
+    setTimeout(() => {
+
+      setMensagem("");
+
+    }, 3000);
+
+
+  }
+
 
 
 
@@ -38,97 +70,62 @@ function Financeiro() {
       descricao === "" ||
       valor === ""
     ) {
+
+
+      mostrarMensagem(
+        "Preencha todos os campos"
+      );
+
+
       return;
+
     }
+
 
 
     const novoLancamento = {
 
+
       descricao,
+
       valor: Number(valor),
+
       tipo
 
+
     };
+
 
 
     salvarLancamentos([
 
       ...lancamentos,
+
       novoLancamento
 
     ]);
 
 
-    limparFormulario();
 
-  }
-
-
-
-  function editarLancamento(index) {
-
-    const item = lancamentos[index];
-
-
-    setDescricao(item.descricao);
-    setValor(item.valor);
-    setTipo(item.tipo);
-
-    setEditando(index);
-
-  }
+    setDescricao("");
+    setValor("");
+    setTipo("entrada");
 
 
 
-  function atualizarLancamento() {
+    mostrarMensagem(
 
-
-    const novaLista = lancamentos.map(
-
-      (item, index) => {
-
-        if (index === editando) {
-
-          return {
-
-            descricao,
-            valor: Number(valor),
-            tipo
-
-          };
-
-        }
-
-
-        return item;
-
-      }
+      "Lançamento salvo com sucesso!"
 
     );
 
 
-
-    salvarLancamentos(novaLista);
-
-
-    limparFormulario();
-
   }
+
 
 
 
   function excluirLancamento(index) {
-
-
-    const confirmar = window.confirm(
-      "Deseja excluir este lançamento?"
-    );
-
-
-    if (!confirmar) {
-      return;
-    }
-
 
 
     const novaLista = lancamentos.filter(
@@ -141,24 +138,24 @@ function Financeiro() {
 
     salvarLancamentos(novaLista);
 
+
+
+    mostrarMensagem(
+
+      "Lançamento removido!"
+
+    );
+
+
   }
 
-
-
-  function limparFormulario() {
-
-    setDescricao("");
-    setValor("");
-    setTipo("entrada");
-    setEditando(null);
-
-  }
 
 
 
   const saldo = lancamentos.reduce(
 
     (total, item) => {
+
 
       if (item.tipo === "entrada") {
 
@@ -169,11 +166,13 @@ function Financeiro() {
 
       return total - item.valor;
 
+
     },
 
     0
 
   );
+
 
 
 
@@ -185,16 +184,28 @@ function Financeiro() {
       <h1>💰 Financeiro</h1>
 
 
+      <Mensagem texto={mensagem} />
+
+
 
       <div className="card">
 
-        <h2>Saldo atual</h2>
+
+        <h2>
+          Saldo atual
+        </h2>
+
+
 
         <strong>
+
           R$ {saldo.toFixed(2)}
+
         </strong>
 
+
       </div>
+
 
 
 
@@ -202,19 +213,12 @@ function Financeiro() {
 
 
 
+
       <div className="card">
 
 
         <h3>
-
-          {editando !== null
-
-            ? "Editar lançamento"
-
-            : "Novo lançamento"
-
-          }
-
+          Novo lançamento
         </h3>
 
 
@@ -225,7 +229,9 @@ function Financeiro() {
 
           value={descricao}
 
-          onChange={(e) => setDescricao(e.target.value)}
+          onChange={(e) =>
+            setDescricao(e.target.value)
+          }
 
         />
 
@@ -243,7 +249,9 @@ function Financeiro() {
 
           value={valor}
 
-          onChange={(e) => setValor(e.target.value)}
+          onChange={(e) =>
+            setValor(e.target.value)
+          }
 
         />
 
@@ -257,7 +265,9 @@ function Financeiro() {
 
           value={tipo}
 
-          onChange={(e) => setTipo(e.target.value)}
+          onChange={(e) =>
+            setTipo(e.target.value)
+          }
 
         >
 
@@ -279,36 +289,22 @@ function Financeiro() {
 
 
 
-        {editando !== null ? (
+        <button
 
-          <button onClick={atualizarLancamento}>
+          onClick={adicionarLancamento}
 
-            Salvar alteração
+        >
 
-          </button>
+          Adicionar lançamento
 
-
-        ) : (
-
-
-          <button onClick={adicionarLancamento}>
-
-            Adicionar lançamento
-
-          </button>
-
-
-        )}
-
+        </button>
 
 
       </div>
 
-
-
-
-      <h2>Lançamentos</h2>
-
+            <h2>
+        Lançamentos
+      </h2>
 
 
 
@@ -316,18 +312,13 @@ function Financeiro() {
 
 
         <div
-
           className="card"
-
           key={index}
-
         >
 
 
           <h3>
-
             {item.descricao}
-
           </h3>
 
 
@@ -356,26 +347,15 @@ function Financeiro() {
 
           <button
 
-            onClick={() => editarLancamento(index)}
-
-          >
-
-            ✏️ Editar
-
-          </button>
-
-
-
-          <button
-
-            onClick={() => excluirLancamento(index)}
+            onClick={() =>
+              excluirLancamento(index)
+            }
 
           >
 
             🗑️ Excluir
 
           </button>
-
 
 
         </div>
@@ -388,6 +368,7 @@ function Financeiro() {
     </div>
 
   );
+
 
 }
 

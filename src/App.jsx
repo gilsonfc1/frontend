@@ -27,6 +27,20 @@ function App() {
 
 
 
+
+  function sair() {
+
+    localStorage.removeItem(
+      "usuarioLogado"
+    );
+
+    setLogado(false);
+
+  }
+
+
+
+
   if (!logado) {
 
     return (
@@ -41,9 +55,12 @@ function App() {
 
 
 
+
   return (
 
-    <Sistema />
+    <Sistema
+      sair={sair}
+    />
 
   );
 

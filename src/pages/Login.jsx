@@ -15,9 +15,11 @@ function Login({ entrar }) {
 
     if (email === "" || senha === "") {
 
+
       setMensagem(
         "Preencha e-mail e senha"
       );
+
 
       return;
 
@@ -25,19 +27,42 @@ function Login({ entrar }) {
 
 
 
+    const usuario = {
+
+      nome: "Usuário NegócioAI",
+
+      email
+
+    };
+
+
+
     localStorage.setItem(
+
       "usuarioLogado",
-      JSON.stringify({
-        email
-      })
+
+      JSON.stringify(usuario)
+
     );
 
 
 
-    entrar();
+    setMensagem(
+      "Login realizado!"
+    );
+
+
+
+    setTimeout(() => {
+
+      entrar();
+
+    }, 500);
+
 
 
   }
+
 
 
 
@@ -49,6 +74,7 @@ function Login({ entrar }) {
       <h1>
         NegócioAI
       </h1>
+
 
 
       <h2>
@@ -64,6 +90,7 @@ function Login({ entrar }) {
         </p>
 
       )}
+
 
 
 
@@ -122,6 +149,7 @@ function Login({ entrar }) {
     </div>
 
   );
+
 
 }
 

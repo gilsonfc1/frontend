@@ -12,6 +12,11 @@ function Sistema({ sair }) {
   const [pagina, setPagina] = useState("dashboard");
 
 
+  const usuario = JSON.parse(
+    localStorage.getItem("usuarioLogado")
+  );
+
+
 
   const menus = [
 
@@ -50,7 +55,6 @@ function Sistema({ sair }) {
     }
 
 
-
     if (pagina === "clientes") {
 
       return <Clientes />;
@@ -58,13 +62,11 @@ function Sistema({ sair }) {
     }
 
 
-
     if (pagina === "agenda") {
 
       return <Agenda />;
 
     }
-
 
 
     if (pagina === "financeiro") {
@@ -90,6 +92,28 @@ function Sistema({ sair }) {
         <h2>
           NegócioAI
         </h2>
+
+
+
+        {usuario && (
+
+          <div className="usuario">
+
+            <p>
+              👋 Olá
+            </p>
+
+            <strong>
+              {usuario.nome}
+            </strong>
+
+            <small>
+              {usuario.email}
+            </small>
+
+          </div>
+
+        )}
 
 
 
